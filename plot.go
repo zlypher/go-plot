@@ -3,13 +3,15 @@ package plot
 import (
 	"fmt"
 	"strings"
+
+	"github.com/zlypher/plot/chart"
 )
 
 type Entry struct {
 	Label     string
 	LabelAbbr string
-	XValue    float32
-	YValue    float32
+	XValue    float64
+	YValue    float64
 }
 
 type Chart struct {
@@ -21,12 +23,8 @@ type Chart struct {
 type Spacing struct {
 	Margin  int
 	Padding int
-}
-
-type axis struct {
-	low   float32
-	high  float32
-	steps float32
+	Bar     int
+	Axis    int
 }
 
 const (
@@ -36,20 +34,25 @@ const (
 	barChar   = "+"
 )
 
-func BarChart(entries []Entry) {
-	fmt.Println("Bar Chart")
-	fmt.Println()
-
-	axisWidth, margin, pad, barWidth := 1, 2, 2, 1
-
-	numEntries := len(entries)
-	width := axisWidth + (2 * margin) + numEntries*barWidth + (numEntries-1)*pad
+func BarChart(chart Chart) {
+	numEntries := len(chart.Entries)
+	width := calculateWidth(chart.Spacing, numEntries)
 
 	fmt.Printf("Num Entries: %d\n", numEntries)
 	fmt.Printf("Width of %d\n", width)
 
-	printBarChart(entries, width)
+	printBarChart(chart, width)
 	fmt.Println()
+}
+
+func calculateWidth(sp Spacing, num int) int {
+	return sp.Axis + (2 * sp.Margin) + num*sp.Bar + (num-1)*sp.Padding
+}
+
+func calculateAxis(entries []Entry) chart.Axis {
+	low, high, steps := 0.0, 0.0, 0.0
+
+	return chart.Axis{Low: low, High: high, Steps: steps}
 }
 
 /**
@@ -64,16 +67,16 @@ xxxx    +    x    +    xx    +    x     +    xxxx
 
 */
 
-func printBarChart(entries []Entry, width int) {
+func printBarChart(chrt Chart, width int) {
 	printTitle()
 
-	xA := axis{low: 1, high: 5, steps: 1}
+	xA := chart.Axis{Low: 1, High: 5, Steps: 1}
 	fmt.Println(xA)
 
-	printChart(entries, xA)
+	printChart(chrt.Entries, xA)
 
 	printXAxis(width)
-	printXAxisLabels(entries)
+	printXAxisLabels(chrt.Entries)
 }
 
 func printTitle() {
@@ -81,9 +84,9 @@ func printTitle() {
 	fmt.Println()
 }
 
-func printChart(entries []Entry, xAxis axis) {
+func printChart(entries []Entry, xAxis chart.Axis) {
 	fmt.Println(yAxisChar) // empty line
-	for i := xAxis.high; i >= xAxis.low; i -= xAxis.steps {
+	for i := xAxis.High; i >= xAxis.Low; i -= xAxis.Steps {
 
 		fmt.Printf(yAxisChar)
 		fmt.Printf(strings.Repeat(spaceChar, 2)) // margin
