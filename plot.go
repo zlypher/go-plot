@@ -2,6 +2,7 @@ package plot
 
 import (
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/zlypher/plot/chart"
@@ -50,7 +51,17 @@ func calculateWidth(sp Spacing, num int) int {
 }
 
 func calculateAxis(entries []Entry) chart.Axis {
-	low, high, steps := 0.0, 0.0, 0.0
+	low, high, steps := math.MaxFloat64, math.SmallestNonzeroFloat64, 0.0
+
+	for _, entry := range entries {
+		if entry.YValue < low {
+			low = entry.YValue
+		} else if entry.YValue > high {
+			high = entry.YValue
+		}
+	}
+
+	steps = 1.0
 
 	return chart.Axis{Low: low, High: high, Steps: steps}
 }
@@ -70,9 +81,7 @@ xxxx    +    x    +    xx    +    x     +    xxxx
 func printBarChart(chrt Chart, width int) {
 	printTitle()
 
-	xA := chart.Axis{Low: 1, High: 5, Steps: 1}
-	fmt.Println(xA)
-
+	xA := calculateAxis(chrt.Entries)
 	printChart(chrt.Entries, xA)
 
 	printXAxis(width)
