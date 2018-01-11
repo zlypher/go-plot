@@ -30,10 +30,11 @@ type Spacing struct {
 }
 
 const (
-	xAxisChar = "-"
-	yAxisChar = "|"
-	spaceChar = " "
-	barChar   = "+"
+	xAxisChar     = "-"
+	yAxisChar     = "|"
+	crossAxisChar = "+"
+	spaceChar     = " "
+	barChar       = "+"
 )
 
 func BarChart(chart Chart) {
@@ -89,7 +90,7 @@ xxxx    +    x    +    xx    +    x     +    xxxx
 */
 
 func printBarChart(chrt Chart, width int) {
-	printTitle()
+	printTitle(chrt.Title)
 
 	xA := calculateAxis(chrt.Entries)
 	printChart(chrt.Entries, xA)
@@ -98,8 +99,8 @@ func printBarChart(chrt Chart, width int) {
 	printXAxisLabels(chrt.Entries)
 }
 
-func printTitle() {
-	fmt.Println("            ++ Lorem Ipsum ++             ")
+func printTitle(title string) {
+	fmt.Printf("  %s  \n", title)
 	fmt.Println()
 }
 
@@ -128,7 +129,8 @@ func printChart(entries []Entry, xAxis chart.Axis) {
 }
 
 func printXAxis(width int) {
-	fmt.Println(strings.Repeat(xAxisChar, width))
+	fmt.Printf(crossAxisChar)
+	fmt.Println(strings.Repeat(xAxisChar, width-1))
 }
 
 func printXAxisLabels(entries []Entry) {
