@@ -17,6 +17,7 @@ type Entry struct {
 
 type Chart struct {
 	Title   string
+	Debug   bool
 	Spacing Spacing
 	Entries []Entry
 }
@@ -39,8 +40,9 @@ func BarChart(chart Chart) {
 	numEntries := len(chart.Entries)
 	width := calculateWidth(chart.Spacing, numEntries)
 
-	fmt.Printf("Num Entries: %d\n", numEntries)
-	fmt.Printf("Width of %d\n", width)
+	if chart.Debug {
+		printDebugInfo(numEntries, width)
+	}
 
 	printBarChart(chart, width)
 	fmt.Println()
@@ -64,6 +66,14 @@ func calculateAxis(entries []Entry) chart.Axis {
 	steps = 1.0
 
 	return chart.Axis{Low: low, High: high, Steps: steps}
+}
+
+func printDebugInfo(numEntries int, width int) {
+	fmt.Println("-----")
+	fmt.Printf("Number of Entries: %d\n", numEntries)
+	fmt.Printf("Width of Chart %d\n", width)
+	fmt.Println("-----")
+	fmt.Println()
 }
 
 /**
