@@ -5,7 +5,7 @@ import (
 	"math"
 	"strings"
 
-	"github.com/zlypher/plot/chart"
+	"github.com/zlypher/go-plot/chart"
 )
 
 // Entry represents a single point on the chart.
