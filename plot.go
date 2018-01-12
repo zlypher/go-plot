@@ -82,21 +82,32 @@ func printDebugInfo(numEntries int, width int) {
 }
 
 func printBarChart(chrt Chart, width int) {
-	if chrt.Title != "" {
-		printTitle(chrt.Title)
-	}
-
 	xA := calculateAxis(chrt.Entries)
 	// TODO: Determine max with of yaxis label
 	axisLabelWidth := 5
+
+	if chrt.Title != "" {
+		printTitle(chrt.Title, width+axisLabelWidth+3)
+	}
 	printChart(chrt.Entries, xA, axisLabelWidth)
 
 	printXAxis(width, axisLabelWidth)
 	printXAxisLabels(chrt.Entries, axisLabelWidth)
 }
 
-func printTitle(title string) {
-	fmt.Printf("  %s  \n\n", title)
+func printTitle(title string, width int) {
+	titleLen := len(title)
+	if titleLen >= width {
+		fmt.Printf("%s\n\n", title)
+		return
+	}
+
+	pad := (width - titleLen) / 2
+
+	fmt.Printf("%s%s%s\n\n",
+		strings.Repeat(spaceChar, pad),
+		title,
+		strings.Repeat(spaceChar, pad))
 }
 
 func printChart(entries []Entry, axis chart.Axis, axisLabelWidth int) {
