@@ -32,6 +32,7 @@ type Spacing struct {
 	Axis    int
 }
 
+// Characters used to draw to various chart components
 const (
 	xAxisChar     = "-"
 	yAxisChar     = "|"
