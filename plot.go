@@ -87,21 +87,26 @@ func printBarChart(chrt Chart, width int) {
 	}
 
 	xA := calculateAxis(chrt.Entries)
-	printChart(chrt.Entries, xA)
+	// TODO: Determine max with of yaxis label
+	axisLabelWidth := 5
+	printChart(chrt.Entries, xA, axisLabelWidth)
 
-	printXAxis(width)
-	printXAxisLabels(chrt.Entries)
+	printXAxis(width, axisLabelWidth)
+	printXAxisLabels(chrt.Entries, axisLabelWidth)
 }
 
 func printTitle(title string) {
 	fmt.Printf("  %s  \n\n", title)
 }
 
-func printChart(entries []Entry, xAxis chart.Axis) {
+func printChart(entries []Entry, axis chart.Axis, axisLabelWidth int) {
 	// Start the chart with a line with only the y axis drawn
-	fmt.Println(yAxisChar)
+	fmt.Printf("%s%s\n", strings.Repeat(spaceChar, axisLabelWidth+3), yAxisChar)
 
-	for i := xAxis.High; i >= xAxis.Low; i -= xAxis.Steps {
+	labelFmt := fmt.Sprintf("%%%d.0f - ", axisLabelWidth)
+	for val := axis.High; val >= axis.Low; val -= axis.Steps {
+		// Print current y axis value
+		fmt.Printf(labelFmt, val)
 
 		// Print the y axis and the margin until the first bar
 		fmt.Printf("%s%s", yAxisChar, strings.Repeat(spaceChar, 2))
@@ -115,7 +120,7 @@ func printChart(entries []Entry, xAxis chart.Axis) {
 
 			// If the bar reaches up to the current value, draw the bar.
 			// If not, draw a spacing.
-			if entry.YValue >= i {
+			if entry.YValue >= val {
 				fmt.Printf(barChar)
 			} else {
 				fmt.Printf(spaceChar)
@@ -127,12 +132,17 @@ func printChart(entries []Entry, xAxis chart.Axis) {
 	}
 }
 
-func printXAxis(width int) {
-	fmt.Printf("%s%s\n", crossAxisChar, strings.Repeat(xAxisChar, width-1))
+func printXAxis(width int, axisLabelWidth int) {
+	fmt.Printf("%s%s%s\n",
+		strings.Repeat(spaceChar, axisLabelWidth+3),
+		crossAxisChar,
+		strings.Repeat(xAxisChar, width-1))
 }
 
-func printXAxisLabels(entries []Entry) {
-	fmt.Printf(strings.Repeat(spaceChar, 1+2)) // axis + margin
+func printXAxisLabels(entries []Entry, axisLabelWidth int) {
+	fmt.Printf("%s%s",
+		strings.Repeat(spaceChar, axisLabelWidth+3),
+		strings.Repeat(spaceChar, 1+2)) // axis + margin
 
 	for idx, entry := range entries {
 		if idx != 0 {
