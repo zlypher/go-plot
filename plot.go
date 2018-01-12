@@ -58,7 +58,7 @@ func calculateWidth(sp Spacing, num int) int {
 }
 
 func calculateAxis(entries []Entry) chart.Axis {
-	low, high, steps := math.MaxFloat64, math.SmallestNonzeroFloat64, 0.0
+	low, high, steps := 0.0, math.SmallestNonzeroFloat64, 0.0
 
 	for _, entry := range entries {
 		if entry.YValue < low {
