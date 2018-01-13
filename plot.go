@@ -56,10 +56,6 @@ func BarChart(chart Chart) {
 	fmt.Println()
 }
 
-func calculateWidth(sp Spacing, num int) int {
-	return sp.Axis + (2 * sp.Margin) + num*sp.Bar + (num-1)*sp.Padding
-}
-
 func calculateAxis(entries []Entry) chart.Axis {
 	low, high, steps := 0.0, math.SmallestNonzeroFloat64, 0.0
 

@@ -25,3 +25,7 @@ func printTitle(title string, width int) {
 		strings.Repeat(" ", pad),
 		title)
 }
+
+func calculateWidth(sp Spacing, num int) int {
+	return sp.Axis + (2 * sp.Margin) + num*sp.Bar + (num-1)*sp.Padding
+}
