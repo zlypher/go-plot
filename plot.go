@@ -3,6 +3,7 @@ package plot
 import (
 	"fmt"
 	"math"
+	"os"
 	"strings"
 
 	"github.com/zlypher/go-plot/chart"
@@ -39,7 +40,7 @@ func BarChart(chart Chart) {
 	width := calculateWidth(chart.Spacing, numEntries)
 
 	if chart.Debug {
-		printDebugInfo(numEntries, width)
+		printDebugInfo(os.Stdout, numEntries, width)
 	}
 
 	xA := calculateAxis(chart.Entries)
@@ -47,8 +48,9 @@ func BarChart(chart Chart) {
 	axisLabelWidth := 5
 
 	if chart.Title != "" {
-		printTitle(chart.Title, width+axisLabelWidth+3)
+		print(os.Stdout, formatTitle(chart.Title, width+axisLabelWidth+3))
 	}
+
 	printChart(chart.Entries, xA, chart.Theme, axisLabelWidth)
 
 	printXAxis(chart.Theme, width, axisLabelWidth)

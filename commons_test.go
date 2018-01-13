@@ -1,6 +1,7 @@
 package plot
 
 import (
+	"bytes"
 	"testing"
 )
 
@@ -8,8 +9,25 @@ func TestPrintDebugInfo(t *testing.T) {
 	// TODO: Make printDebugInfo testable
 }
 
-func TestPrintTitle(t *testing.T) {
-	// TODO: Make printTitle testable
+func TestFormatTitle(t *testing.T) {
+	tests := []struct {
+		title     string
+		width     int
+		formatted string
+	}{
+		{"", 0, "\n\n"},
+		{"A", 1, "A\n\n"},
+		{"ABC", 3, "ABC\n\n"},
+		{"A", 5, "  A\n\n"},
+		{"Hello", 12, "   Hello\n\n"},
+	}
+
+	for _, test := range tests {
+		formatted := formatTitle(test.title, test.width)
+		if formatted != test.formatted {
+			t.Errorf("FormatTitle(%s, %d) was incorrect, got: \"%s\", want: \"%s\".", test.title, test.width, formatted, test.formatted)
+		}
+	}
 }
 
 func TestCalculateWidth(t *testing.T) {
@@ -30,6 +48,25 @@ func TestCalculateWidth(t *testing.T) {
 		width := calculateWidth(test.spacing, test.num)
 		if width != test.width {
 			t.Errorf("Calculated width (%d, %v) was incorrect, got: %d, want: %d.", test.num, test.spacing, width, test.width)
+		}
+	}
+}
+
+func TestPrint(t *testing.T) {
+	tests := []struct {
+		output string
+	}{
+		{"A"},
+		{"Hello World"},
+		{"This is a Test"},
+		{"Lorem Ipsum"},
+	}
+
+	for _, test := range tests {
+		var b bytes.Buffer
+		print(&b, test.output)
+		if b.String() != test.output {
+			t.Errorf("print(%s) was incorrect, got: %s, want: %s.", test.output, b.String(), test.output)
 		}
 	}
 }
