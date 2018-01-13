@@ -76,27 +76,6 @@ func calculateAxis(entries []Entry) chart.Axis {
 	return chart.Axis{Low: low, High: high, Steps: steps}
 }
 
-func printDebugInfo(numEntries int, width int) {
-	fmt.Println("-----")
-	fmt.Printf("Number of Entries: %d\n", numEntries)
-	fmt.Printf("Width of Chart %d\n", width)
-	fmt.Printf("-----\n\n")
-}
-
-func printTitle(title string, width int) {
-	titleLen := len(title)
-	if titleLen >= width {
-		fmt.Printf("%s\n\n", title)
-		return
-	}
-
-	pad := (width - titleLen) / 2
-
-	fmt.Printf("%s%s\n\n",
-		strings.Repeat(" ", pad),
-		title)
-}
-
 func printChart(entries []Entry, axis chart.Axis, theme Theme, axisLabelWidth int) {
 	// Start the chart with a line with only the y axis drawn
 	fmt.Printf("%s%s\n", strings.Repeat(" ", axisLabelWidth+3), theme.YAxis)
