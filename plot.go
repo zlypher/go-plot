@@ -9,6 +9,13 @@ import (
 	"github.com/zlypher/go-plot/chart"
 )
 
+// Plotable defines an interface for object which can be represented on a chart.
+type Plotable interface {
+	// GetX() float64
+	GetY() float64
+	GetLabel() string
+}
+
 // Entry represents a single point on the chart.
 type Entry struct {
 	Label     string
@@ -17,12 +24,24 @@ type Entry struct {
 	YValue    float64
 }
 
+// func (e *Entry) GetX() float64 {
+// 	return e.XValue
+// }
+
+func (e Entry) GetY() float64 {
+	return e.YValue
+}
+
+func (e Entry) GetLabel() string {
+	return e.LabelAbbr
+}
+
 // Chart holds all required data to render the chart.
 type Chart struct {
 	Title   string
 	Debug   bool
 	Spacing Spacing
-	Entries []Entry
+	Entries []Plotable
 	Theme   Theme
 }
 
@@ -58,14 +77,15 @@ func BarChart(chart Chart) {
 	print(os.Stdout, "\n")
 }
 
-func calculateAxis(entries []Entry) chart.Axis {
+func calculateAxis(entries []Plotable) chart.Axis {
 	low, high, steps := 0.0, math.SmallestNonzeroFloat64, 0.0
 
 	for _, entry := range entries {
-		if entry.YValue < low {
-			low = entry.YValue
-		} else if entry.YValue > high {
-			high = entry.YValue
+		y := entry.GetY()
+		if y < low {
+			low = y
+		} else if y > high {
+			high = y
 		}
 	}
 
@@ -74,7 +94,7 @@ func calculateAxis(entries []Entry) chart.Axis {
 	return chart.Axis{Low: low, High: high, Steps: steps}
 }
 
-func printChart(entries []Entry, axis chart.Axis, theme Theme, axisLabelWidth int) {
+func printChart(entries []Plotable, axis chart.Axis, theme Theme, axisLabelWidth int) {
 	// Start the chart with a line with only the y axis drawn
 	fmt.Printf("%s%s\n", strings.Repeat(" ", axisLabelWidth+3), theme.YAxis)
 
@@ -95,7 +115,7 @@ func printChart(entries []Entry, axis chart.Axis, theme Theme, axisLabelWidth in
 
 			// If the bar reaches up to the current value, draw the bar.
 			// If not, draw a spacing.
-			if entry.YValue >= val {
+			if entry.GetY() >= val {
 				fmt.Printf(theme.Bar)
 			} else {
 				fmt.Printf(" ")
@@ -114,7 +134,7 @@ func formatXAxis(theme Theme, width int, axisLabelWidth int) string {
 		strings.Repeat(theme.XAxis, width-1))
 }
 
-func printXAxisLabels(entries []Entry, axisLabelWidth int) {
+func printXAxisLabels(entries []Plotable, axisLabelWidth int) {
 	fmt.Printf("%s%s",
 		strings.Repeat(" ", axisLabelWidth+3),
 		strings.Repeat(" ", 3)) // axis + margin
@@ -124,6 +144,6 @@ func printXAxisLabels(entries []Entry, axisLabelWidth int) {
 			fmt.Printf(strings.Repeat(" ", 2)) // pad
 		}
 
-		fmt.Printf(entry.LabelAbbr)
+		fmt.Printf(entry.GetLabel())
 	}
 }
