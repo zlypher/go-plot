@@ -5,8 +5,23 @@ import (
 	"testing"
 )
 
-func TestPrintDebugInfo(t *testing.T) {
-	// TODO: Make printDebugInfo testable
+func TestFormatDebugInfo(t *testing.T) {
+	tests := []struct {
+		numEntries int
+		width      int
+		formatted  string
+	}{
+		{0, 0, "-----\nNumber of Entries: 0\nWidth of Chart 0\n-----\n\n"},
+		{1, 2, "-----\nNumber of Entries: 1\nWidth of Chart 2\n-----\n\n"},
+		{10, 15, "-----\nNumber of Entries: 10\nWidth of Chart 15\n-----\n\n"},
+	}
+
+	for _, test := range tests {
+		formatted := formatDebugInfo(test.numEntries, test.width)
+		if formatted != test.formatted {
+			t.Errorf("FormatDebugInfo(%d, %d) was incorrect, got: \"%s\", want: \"%s\".", test.numEntries, test.width, formatted, test.formatted)
+		}
+	}
 }
 
 func TestFormatTitle(t *testing.T) {

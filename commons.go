@@ -6,11 +6,13 @@ import (
 	"strings"
 )
 
-func printDebugInfo(w io.Writer, numEntries int, width int) {
-	fmt.Fprintln(w, "-----")
-	fmt.Fprintf(w, "Number of Entries: %d\n", numEntries)
-	fmt.Fprintf(w, "Width of Chart %d\n", width)
-	fmt.Fprintf(w, "-----\n\n")
+func formatDebugInfo(numEntries int, width int) string {
+	return fmt.Sprint(
+		fmt.Sprintf("-----\n"),
+		fmt.Sprintf("Number of Entries: %d\n", numEntries),
+		fmt.Sprintf("Width of Chart %d\n", width),
+		fmt.Sprintf("-----\n\n"),
+	)
 }
 
 func formatTitle(title string, width int) string {

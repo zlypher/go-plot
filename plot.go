@@ -40,7 +40,7 @@ func BarChart(chart Chart) {
 	width := calculateWidth(chart.Spacing, numEntries)
 
 	if chart.Debug {
-		printDebugInfo(os.Stdout, numEntries, width)
+		print(os.Stdout, formatDebugInfo(numEntries, width))
 	}
 
 	xA := calculateAxis(chart.Entries)
@@ -53,9 +53,9 @@ func BarChart(chart Chart) {
 
 	printChart(chart.Entries, xA, chart.Theme, axisLabelWidth)
 
-	printXAxis(chart.Theme, width, axisLabelWidth)
+	print(os.Stdout, formatXAxis(chart.Theme, width, axisLabelWidth))
 	printXAxisLabels(chart.Entries, axisLabelWidth)
-	fmt.Println()
+	print(os.Stdout, "\n")
 }
 
 func calculateAxis(entries []Entry) chart.Axis {
@@ -107,8 +107,8 @@ func printChart(entries []Entry, axis chart.Axis, theme Theme, axisLabelWidth in
 	}
 }
 
-func printXAxis(theme Theme, width int, axisLabelWidth int) {
-	fmt.Printf("%s%s%s\n",
+func formatXAxis(theme Theme, width int, axisLabelWidth int) string {
+	return fmt.Sprintf("%s%s%s\n",
 		strings.Repeat(" ", axisLabelWidth+3),
 		theme.CrossAxis,
 		strings.Repeat(theme.XAxis, width-1))
