@@ -1,8 +1,19 @@
 package plot
 
 import (
+	"math"
 	"testing"
 )
+
+// TODO
+func TestCalculateAxis(t *testing.T) {
+	expected := Axis{High: math.SmallestNonzeroFloat64, Steps: 1}
+	actual := calculateAxis(nil)
+
+	if actual != expected {
+		t.Errorf("calculateAxis(%v) was incorrect, got: \"%v\", want: \"%v\".", nil, actual, expected)
+	}
+}
 
 func TestEntryStruct(t *testing.T) {
 	tests := []struct {
