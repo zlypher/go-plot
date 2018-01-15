@@ -5,8 +5,6 @@ import (
 	"math"
 	"os"
 	"strings"
-
-	"github.com/zlypher/go-plot/chart"
 )
 
 // Plotable defines an interface for object which can be represented on a chart.
@@ -73,11 +71,11 @@ func BarChart(chart Chart) {
 	printChart(chart.Entries, xA, chart.Theme, axisLabelWidth)
 
 	print(os.Stdout, formatXAxis(chart.Theme, width, axisLabelWidth))
-	printXAxisLabels(chart.Entries, axisLabelWidth)
+	print(os.Stdout, formatXAxisLabels(chart.Entries, axisLabelWidth))
 	print(os.Stdout, "\n")
 }
 
-func calculateAxis(entries []Plotable) chart.Axis {
+func calculateAxis(entries []Plotable) Axis {
 	low, high, steps := 0.0, math.SmallestNonzeroFloat64, 0.0
 
 	for _, entry := range entries {
@@ -91,10 +89,10 @@ func calculateAxis(entries []Plotable) chart.Axis {
 
 	steps = 1.0
 
-	return chart.Axis{Low: low, High: high, Steps: steps}
+	return Axis{Low: low, High: high, Steps: steps}
 }
 
-func printChart(entries []Plotable, axis chart.Axis, theme Theme, axisLabelWidth int) {
+func printChart(entries []Plotable, axis Axis, theme Theme, axisLabelWidth int) {
 	// Start the chart with a line with only the y axis drawn
 	fmt.Printf("%s%s\n", strings.Repeat(" ", axisLabelWidth+3), theme.YAxis)
 
@@ -134,16 +132,21 @@ func formatXAxis(theme Theme, width int, axisLabelWidth int) string {
 		strings.Repeat(theme.XAxis, width-1))
 }
 
-func printXAxisLabels(entries []Plotable, axisLabelWidth int) {
-	fmt.Printf("%s%s",
-		strings.Repeat(" ", axisLabelWidth+3),
-		strings.Repeat(" ", 3)) // axis + margin
+// TODO: Pass margin and padding as spacing
+func formatXAxisLabels(entries []Plotable, axisLabelWidth int) string {
+	if len(entries) == 0 {
+		return ""
+	}
+
+	output := fmt.Sprint(strings.Repeat(" ", axisLabelWidth+6)) // axis + margin
 
 	for idx, entry := range entries {
 		if idx != 0 {
-			fmt.Printf(strings.Repeat(" ", 2)) // pad
+			output = fmt.Sprint(output, strings.Repeat(" ", 2)) // pad
 		}
 
-		fmt.Printf(entry.GetLabel())
+		output = fmt.Sprint(output, entry.GetLabel())
 	}
+
+	return output
 }

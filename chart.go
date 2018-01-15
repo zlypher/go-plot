@@ -1,4 +1,4 @@
-package chart
+package plot
 
 type Axis struct {
 	Low   float64
