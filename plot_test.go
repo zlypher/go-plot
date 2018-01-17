@@ -37,6 +37,22 @@ func TestEntryStruct(t *testing.T) {
 	}
 }
 
+func TestFormatChart_BasicImplementation(t *testing.T) {
+	var entries []Plotable
+	entries = append(entries, Entry{XValue: 1, YValue: 1})
+	entries = append(entries, Entry{XValue: 2, YValue: 3})
+	entries = append(entries, Entry{XValue: 3, YValue: 2})
+	axis := Axis{Low: 0, Steps: 1, High: 5}
+	theme := Theme{YAxis: "|", Bar: "+"}
+	axisLabelWidth := 5
+	expected := "        |\n    5 - |           \n    4 - |           \n    3 - |     +     \n    2 - |     +  +  \n    1 - |  +  +  +  \n    0 - |  +  +  +  \n"
+	formatted := formatChart(entries, axis, theme, axisLabelWidth)
+
+	if formatted != expected {
+		t.Errorf("formatChart(%v, %v, %v, %d) was incorrect, got: \"%s\", want: \"%s\".", entries, axis, theme, axisLabelWidth, formatted, expected)
+	}
+}
+
 func TestFormatXAxis(t *testing.T) {
 	tests := []struct {
 		theme      Theme
