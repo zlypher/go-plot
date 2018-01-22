@@ -100,7 +100,8 @@ func getExtremes(entries []Plotable) (float64, float64) {
 
 func calculateAxis(entries []Plotable) Axis {
 	low, high := getExtremes(entries)
-	steps := 1.0
+	stepCount := 5.0
+	steps := high / stepCount
 
 	return Axis{Low: low, High: high, Steps: steps}
 }

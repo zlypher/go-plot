@@ -42,7 +42,7 @@ func TestGetExtremes_OneEntry(t *testing.T) {
 
 // TODO
 func TestCalculateAxis(t *testing.T) {
-	expected := Axis{High: 0.0, Steps: 1.0}
+	expected := Axis{High: 0.0, Steps: 0.0}
 	actual := calculateAxis(nil)
 
 	if actual != expected {
