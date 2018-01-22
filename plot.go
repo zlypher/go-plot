@@ -73,7 +73,7 @@ func BarChart(chart Chart) {
 
 	print(os.Stdout, formatChart(chart.Entries, xA, chart.Theme, axisLabelWidth))
 
-	print(os.Stdout, formatXAxis(chart.Theme, width, axisLabelWidth))
+	print(os.Stdout, formatXAxis(chart.Theme, width, axisLabelWidth, xA.Low))
 	print(os.Stdout, formatXAxisLabels(chart.Entries, axisLabelWidth))
 	print(os.Stdout, "\n")
 }
@@ -108,9 +108,9 @@ func calculateAxis(entries []Plotable) Axis {
 func formatChart(entries []Plotable, axis Axis, theme Theme, axisLabelWidth int) string {
 	// Start the chart with a line with only the y axis drawn
 	output := fmt.Sprintf("%s%s\n", strings.Repeat(" ", axisLabelWidth+3), theme.YAxis)
+	labelFmt := getLabelFormat(axisLabelWidth)
 
-	labelFmt := fmt.Sprintf("%%%d.0f - ", axisLabelWidth)
-	for val := axis.High; val >= axis.Low; val -= axis.Steps {
+	for val := axis.High; val > axis.Low; val -= axis.Steps {
 		// Print current y axis value
 		output = fmt.Sprintf("%s"+labelFmt, output, val)
 
@@ -140,9 +140,15 @@ func formatChart(entries []Plotable, axis Axis, theme Theme, axisLabelWidth int)
 	return output
 }
 
-func formatXAxis(theme Theme, width int, axisLabelWidth int) string {
+func getLabelFormat(axisLabelWidth int) string {
+	return fmt.Sprintf("%%%d.0f - ", axisLabelWidth)
+}
+
+func formatXAxis(theme Theme, width int, axisLabelWidth int, axisVal float64) string {
+	labelFmt := getLabelFormat(axisLabelWidth)
+
 	return fmt.Sprintf("%s%s%s\n",
-		strings.Repeat(" ", axisLabelWidth+3),
+		fmt.Sprintf(labelFmt, axisVal),
 		theme.CrossAxis,
 		strings.Repeat(theme.XAxis, width-1))
 }

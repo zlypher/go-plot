@@ -80,7 +80,7 @@ func TestFormatChart_BasicImplementation(t *testing.T) {
 	axis := Axis{Low: 0, Steps: 1, High: 5}
 	theme := Theme{YAxis: "|", Bar: "+"}
 	axisLabelWidth := 5
-	expected := "        |\n    5 - |           \n    4 - |           \n    3 - |     +     \n    2 - |     +  +  \n    1 - |  +  +  +  \n    0 - |  +  +  +  \n"
+	expected := "        |\n    5 - |           \n    4 - |           \n    3 - |     +     \n    2 - |     +  +  \n    1 - |  +  +  +  \n"
 	formatted := formatChart(entries, axis, theme, axisLabelWidth)
 
 	if formatted != expected {
@@ -93,18 +93,19 @@ func TestFormatXAxis(t *testing.T) {
 		theme      Theme
 		width      int
 		labelWidth int
+		axisVal    float64
 		formatted  string
 	}{
-		{Theme{CrossAxis: "+", XAxis: "-"}, 3, 3, "      +--\n"},
-		{Theme{CrossAxis: "+", XAxis: "-"}, 10, 3, "      +---------\n"},
-		{Theme{CrossAxis: "+", XAxis: "+"}, 10, 3, "      ++++++++++\n"},
-		{Theme{CrossAxis: "#", XAxis: "="}, 10, 3, "      #=========\n"},
+		{Theme{CrossAxis: "+", XAxis: "-"}, 3, 3, 0.0, "  0 - +--\n"},
+		{Theme{CrossAxis: "+", XAxis: "-"}, 10, 3, -2.0, " -2 - +---------\n"},
+		{Theme{CrossAxis: "+", XAxis: "+"}, 10, 3, 3.0, "  3 - ++++++++++\n"},
+		{Theme{CrossAxis: "#", XAxis: "="}, 10, 3, 5.0, "  5 - #=========\n"},
 	}
 
 	for _, test := range tests {
-		formatted := formatXAxis(test.theme, test.width, test.labelWidth)
+		formatted := formatXAxis(test.theme, test.width, test.labelWidth, test.axisVal)
 		if formatted != test.formatted {
-			t.Errorf("formatXAxis(%v, %d, %d) was incorrect, got: \"%s\", want: \"%s\".", test.theme, test.width, test.labelWidth, formatted, test.formatted)
+			t.Errorf("formatXAxis(%v, %d, %d, %f) was incorrect, got: \"%s\", want: \"%s\".", test.theme, test.width, test.labelWidth, test.axisVal, formatted, test.formatted)
 		}
 	}
 }
