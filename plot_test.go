@@ -1,7 +1,6 @@
 package plot
 
 import (
-	"math"
 	"testing"
 )
 
@@ -43,7 +42,7 @@ func TestGetExtremes_OneEntry(t *testing.T) {
 
 // TODO
 func TestCalculateAxis(t *testing.T) {
-	expected := Axis{High: math.SmallestNonzeroFloat64, Steps: 1}
+	expected := Axis{High: 0.0, Steps: 1.0}
 	actual := calculateAxis(nil)
 
 	if actual != expected {
