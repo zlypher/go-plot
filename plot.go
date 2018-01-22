@@ -2,7 +2,6 @@ package plot
 
 import (
 	"fmt"
-	"math"
 	"os"
 	"strings"
 )
@@ -79,8 +78,13 @@ func BarChart(chart Chart) {
 	print(os.Stdout, "\n")
 }
 
-func calculateAxis(entries []Plotable) Axis {
-	low, high, steps := 0.0, math.SmallestNonzeroFloat64, 0.0
+func getExtremes(entries []Plotable) (float64, float64) {
+	if len(entries) == 0 {
+		return 0.0, 0.0
+	}
+
+	firstY := entries[0].GetY()
+	low, high := firstY, firstY
 
 	for _, entry := range entries {
 		y := entry.GetY()
@@ -91,7 +95,12 @@ func calculateAxis(entries []Plotable) Axis {
 		}
 	}
 
-	steps = 1.0
+	return low, high
+}
+
+func calculateAxis(entries []Plotable) Axis {
+	low, high := getExtremes(entries)
+	steps := 1.0
 
 	return Axis{Low: low, High: high, Steps: steps}
 }

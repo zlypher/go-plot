@@ -5,6 +5,42 @@ import (
 	"testing"
 )
 
+func TestGetExtremes(t *testing.T) {
+	var entries []Plotable
+	entries = append(entries, Entry{YValue: 10})
+	entries = append(entries, Entry{YValue: 30})
+	entries = append(entries, Entry{YValue: -10})
+	entries = append(entries, Entry{YValue: 30})
+	entries = append(entries, Entry{YValue: 0})
+	entries = append(entries, Entry{YValue: 20})
+	entries = append(entries, Entry{YValue: 19})
+	expMin, expMax := -10.0, 30.0
+	min, max := getExtremes(entries)
+
+	if min != expMin {
+		t.Errorf("getExtremes(%v), min was incorrect, got: \"%f\", want: \"%f\".", entries, min, expMin)
+	}
+
+	if max != expMax {
+		t.Errorf("getExtremes(%v), max was incorrect, got: \"%f\", want: \"%f\".", entries, max, expMax)
+	}
+}
+
+func TestGetExtremes_OneEntry(t *testing.T) {
+	var entries []Plotable
+	entries = append(entries, Entry{YValue: 10})
+	expMin, expMax := 10.0, 10.0
+	min, max := getExtremes(entries)
+
+	if min != expMin {
+		t.Errorf("getExtremes(%v), min was incorrect, got: \"%f\", want: \"%f\".", entries, min, expMin)
+	}
+
+	if max != expMax {
+		t.Errorf("getExtremes(%v), max was incorrect, got: \"%f\", want: \"%f\".", entries, max, expMax)
+	}
+}
+
 // TODO
 func TestCalculateAxis(t *testing.T) {
 	expected := Axis{High: math.SmallestNonzeroFloat64, Steps: 1}
