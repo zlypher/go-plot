@@ -2,9 +2,13 @@ package plot
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
+
+// Target for chart rendering. Defaults to standard output.
+var chartWriter io.Writer = os.Stdout
 
 // Plotable defines an interface for object which can be represented on a chart.
 type Plotable interface {
@@ -54,13 +58,14 @@ type Spacing struct {
 func BarChart(chart Chart) {
 	numEntries := len(chart.Entries)
 	if numEntries == 0 {
-		print(os.Stdout, "No chart entries available")
+		print(chartWriter, "No chart entries available")
+		return
 	}
 
 	width := calculateWidth(chart.Spacing, numEntries)
 
 	if chart.Debug {
-		print(os.Stdout, formatDebugInfo(numEntries, width))
+		print(chartWriter, formatDebugInfo(numEntries, width))
 	}
 
 	xA := calculateAxis(chart.Entries)
@@ -68,14 +73,14 @@ func BarChart(chart Chart) {
 	axisLabelWidth := 5
 
 	if chart.Title != "" {
-		print(os.Stdout, formatTitle(chart.Title, width+axisLabelWidth+3))
+		print(chartWriter, formatTitle(chart.Title, width+axisLabelWidth+3))
 	}
 
-	print(os.Stdout, formatChart(chart.Entries, xA, chart.Theme, axisLabelWidth))
+	print(chartWriter, formatChart(chart.Entries, xA, chart.Theme, axisLabelWidth))
 
-	print(os.Stdout, formatXAxis(chart.Theme, width, axisLabelWidth, xA.Low))
-	print(os.Stdout, formatXAxisLabels(chart.Entries, axisLabelWidth))
-	print(os.Stdout, "\n")
+	print(chartWriter, formatXAxis(chart.Theme, width, axisLabelWidth, xA.Low))
+	print(chartWriter, formatXAxisLabels(chart.Entries, axisLabelWidth))
+	print(chartWriter, "\n")
 }
 
 func getExtremes(entries []Plotable) (float64, float64) {

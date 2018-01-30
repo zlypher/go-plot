@@ -1,8 +1,75 @@
 package plot
 
 import (
+	"bytes"
+	"io"
 	"testing"
 )
+
+func setChartWriter(newWriter io.Writer) {
+	chartWriter = newWriter
+}
+
+func TestBarChartNoEntries(t *testing.T) {
+	var dummyWriter bytes.Buffer
+	currentWriter := chartWriter
+	chartWriter = &dummyWriter
+	defer setChartWriter(currentWriter)
+
+	chart := Chart{
+		Spacing: Spacing{Margin: 2, Padding: 2, Bar: 1, Axis: 1},
+		Theme:   DefaultTheme(),
+	}
+
+	expected := "No chart entries available"
+
+	BarChart(chart)
+	actual := dummyWriter.String()
+
+	if actual != expected {
+		t.Errorf("BarChart(%v) was incorrect, got: \"%s\", want: \"%s\".", chart, actual, expected)
+	}
+}
+
+func TestBarChartExample(t *testing.T) {
+	var dummyWriter bytes.Buffer
+	currentWriter := chartWriter
+	chartWriter = &dummyWriter
+	defer setChartWriter(currentWriter)
+
+	var entries []Plotable
+	entries = append(entries, Entry{Label: "Hello", LabelAbbr: "A", XValue: 1, YValue: 10})
+	entries = append(entries, Entry{Label: "Hello", LabelAbbr: "B", XValue: 2, YValue: 20})
+	entries = append(entries, Entry{Label: "Hello", LabelAbbr: "C", XValue: 3, YValue: 3})
+	entries = append(entries, Entry{Label: "Hello", LabelAbbr: "D", XValue: 4, YValue: 0})
+	entries = append(entries, Entry{Label: "Hello", LabelAbbr: "E", XValue: 5, YValue: 35})
+	entries = append(entries, Entry{Label: "Hello", LabelAbbr: "F", XValue: 6, YValue: 15})
+
+	spacing := Spacing{Margin: 2, Padding: 2, Bar: 1, Axis: 1}
+
+	chart := Chart{
+		Spacing: spacing,
+		Entries: entries,
+		Theme:   DefaultTheme(),
+	}
+
+	expected := `        |
+   35 - |              +     
+   28 - |              +     
+   21 - |              +     
+   14 - |     +        +  +  
+    7 - |  +  +        +  +  
+    0 - +--------------------
+           A  B  C  D  E  F
+`
+
+	BarChart(chart)
+	actual := dummyWriter.String()
+
+	if actual != expected {
+		t.Errorf("BarChart(%v) was incorrect, got: \"%s\", want: \"%s\".", chart, actual, expected)
+	}
+}
 
 func TestGetExtremes(t *testing.T) {
 	var entries []Plotable
@@ -80,7 +147,13 @@ func TestFormatChart_BasicImplementation(t *testing.T) {
 	axis := Axis{Low: 0, Steps: 1, High: 5}
 	theme := Theme{YAxis: "|", Bar: "+"}
 	axisLabelWidth := 5
-	expected := "        |\n    5 - |           \n    4 - |           \n    3 - |     +     \n    2 - |     +  +  \n    1 - |  +  +  +  \n"
+	expected := `        |
+    5 - |           
+    4 - |           
+    3 - |     +     
+    2 - |     +  +  
+    1 - |  +  +  +  
+`
 	formatted := formatChart(entries, axis, theme, axisLabelWidth)
 
 	if formatted != expected {
