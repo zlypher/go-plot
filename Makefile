@@ -4,7 +4,7 @@ PACKAGES := \
 all: build silent-test
 
 build:
-	go build plot.go
+	go build -v .
 
 test:
 	go test -v $(PACKAGES)
