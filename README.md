@@ -5,6 +5,12 @@ go-plot is a utility library to display simplistic charts in a command line.
 [![Build Status](https://travis-ci.org/zlypher/go-plot.svg?branch=master)](https://travis-ci.org/zlypher/go-plot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+**Table of Contents**
+* [Getting Started](#getting-started)
+* [Example](#example)
+* [Contributing](#contributing)
+* [License](#license)
+
 ## Getting Started
 
 To get started, simply `go get` the library and import it into your file.
@@ -64,4 +70,4 @@ This is a small side project, so there currently are not strict standards for co
 
 ## License
 
-MIT License (see LICENSE.md)
+MIT License (see [LICENSE.md](LICENSE.md))
