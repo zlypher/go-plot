@@ -1,7 +1,7 @@
 PACKAGES := \
 	github.com/zlypher/go-plot
 
-all: build silent-test
+all: build silent-test vet
 
 build:
 	go build -v .
@@ -11,3 +11,6 @@ test:
 
 silent-test:
 	go test $(PACKAGES)
+
+vet:
+	go vet $(PACKAGES)
